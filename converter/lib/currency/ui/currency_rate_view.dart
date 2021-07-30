@@ -17,6 +17,7 @@ class CurrencyRateView extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         CurrencyCard(
+          amountOnTop: false,
           amount: baseAmount,
           onAmountChanged: (newAmount) {
             BlocProvider.of<CurrencyConverterBloc>(context).add(CurrencyConverterEventChangeBaseAmount(newAmount));
@@ -34,6 +35,7 @@ class CurrencyRateView extends StatelessWidget {
           },
         ),
         CurrencyCard(
+          amountOnTop: true,
           amount: targetAmount,
           onCurrencyChanged: (newCurrency) {
             BlocProvider.of<CurrencyConverterBloc>(context)

@@ -9,8 +9,14 @@ class CurrencyCard extends StatefulWidget {
   final ConversionAmount amount;
   final Function(double)? onAmountChanged;
   final Function(Currency) onCurrencyChanged;
+  final bool amountOnTop;
 
-  const CurrencyCard({Key? key, required this.amount, this.onAmountChanged, required this.onCurrencyChanged})
+  const CurrencyCard(
+      {Key? key,
+      required this.amount,
+      this.onAmountChanged,
+      required this.onCurrencyChanged,
+      required this.amountOnTop})
       : super(key: key);
 
   @override
@@ -20,20 +26,22 @@ class CurrencyCard extends StatefulWidget {
 class _CurrencyCardState extends State<CurrencyCard> {
   @override
   Widget build(BuildContext context) {
+    final currencyRow = _CurrencyRow(
+      currency: widget.amount.currency,
+      onCurrencyChanged: widget.onCurrencyChanged,
+    );
+    final amountRow = _AmountRow(
+      conversionAmount: widget.amount,
+      onAmountChanged: widget.onAmountChanged,
+    );
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            _CurrencyRow(
-              currency: widget.amount.currency,
-              onCurrencyChanged: widget.onCurrencyChanged,
-            ),
-            _AmountRow(
-              conversionAmount: widget.amount,
-              onAmountChanged: widget.onAmountChanged,
-            ),
+            widget.amountOnTop ? amountRow : currencyRow,
+            widget.amountOnTop ? currencyRow : amountRow,
           ],
         ),
       ),
