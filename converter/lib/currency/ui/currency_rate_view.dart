@@ -1,0 +1,38 @@
+import 'package:converter/currency/bloc/bloc.dart';
+import 'package:converter/currency/models/conversion_amount.dart';
+import 'package:converter/currency/ui/widgets/currency_card.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+/// Primary widgets for rates convertion
+class CurrencyRateView extends StatelessWidget {
+  final ConversionAmount baseAmount;
+  final ConversionAmount targetAmount;
+
+  const CurrencyRateView({Key? key, required this.baseAmount, required this.targetAmount}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        CurrencyCard(
+          amount: baseAmount,
+          onAmountChanged: (newAmount) {
+            BlocProvider.of<CurrencyConverterBloc>(context).add(CurrencyConverterEventChangeBaseAmount(newAmount));
+          },
+          onCurrencyChanged: (newCurrency) {
+            BlocProvider.of<CurrencyConverterBloc>(context).add(CurrencyConverterEventChangeBaseCurrency(newCurrency));
+          },
+        ),
+        CurrencyCard(
+          amount: targetAmount,
+          onCurrencyChanged: (newCurrency) {
+            BlocProvider.of<CurrencyConverterBloc>(context)
+                .add(CurrencyConverterEventChangeTargetCurrency(newCurrency));
+          },
+        ),
+      ],
+    );
+  }
+}
