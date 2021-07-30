@@ -41,6 +41,8 @@ class CurrencyConverterBloc extends Bloc<CurrencyConverterEvent, CurrencyConvert
   }
 
   Stream<CurrencyConverterState> _mapInitEventToState(CurrencyConverterEventInit event) async* {
+    yield CurrencyConverterStateInitial();
+
     final defaultBaseCurrency = CurrencyConfig.supportedCurrencies[0];
     final defaultBaseAmount = ConversionAmount(currency: defaultBaseCurrency, majorUnitAmount: 1);
     final defaultTargetCurrency = CurrencyConfig.supportedCurrencies[1];

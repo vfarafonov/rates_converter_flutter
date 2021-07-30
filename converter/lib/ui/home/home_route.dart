@@ -21,7 +21,18 @@ class HomeRoute extends StatelessWidget {
             } else if (state is CurrencyConverterStateError) {
               // TODO(vfarafonov, 7/30/21): Add reset button.
               final message = state.message;
-              return Text("Error: $message");
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text("Error: $message"),
+                  TextButton(
+                    child: Text("Retry"),
+                    onPressed: () {
+                      BlocProvider.of<CurrencyConverterBloc>(context).add(CurrencyConverterEventInit());
+                    },
+                  )
+                ],
+              );
             } else if (state is CurrencyConverterStateRateAvailable) {
               return SingleChildScrollView(
                 child: Center(
