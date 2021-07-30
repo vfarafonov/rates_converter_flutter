@@ -35,8 +35,10 @@ class _CurrencyCardState extends State<CurrencyCard> {
       onAmountChanged: widget.onAmountChanged,
     );
     return Card(
+      elevation: 4,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(16))),
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -64,25 +66,36 @@ class _AmountRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Text(_conversionAmount.currency.symbol),
+        Text(
+          _conversionAmount.currency.symbol,
+          style: Theme.of(context).textTheme.headline6!.copyWith(
+                color: Colors.blue,
+              ),
+        ),
         SizedBox(width: 8),
         ConstrainedBox(
           constraints: BoxConstraints(
             minWidth: 48,
             maxWidth: 128,
           ),
-          child: _getAmountWidget(),
+          child: _getAmountWidget(context),
         ),
       ],
     );
   }
 
   /// Returns TextField if input is allowed and Text otherwise
-  Widget _getAmountWidget() {
+  Widget _getAmountWidget(BuildContext context) {
     if (_onAmountChanged == null) {
       // There is no watcher therefore just displaying the amount
-      return Text(_getUserFriendlyAmount(_conversionAmount.majorUnitAmount));
+      return Text(
+        _getUserFriendlyAmount(_conversionAmount.majorUnitAmount),
+        style: Theme.of(context).textTheme.headline4!.copyWith(
+              color: Colors.blue,
+            ),
+      );
     } else {
       return _AmountInputView(
         onAmountChanged: _onAmountChanged!,
@@ -109,7 +122,10 @@ class _CurrencyRow extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text("${_currency.symbol} ${_currency.currencyCode}"),
+        Text(
+          "${_currency.symbol} ${_currency.currencyCode}",
+          style: Theme.of(context).textTheme.subtitle2,
+        ),
         DropdownButton(
           value: _currency,
           icon: const Icon(Icons.keyboard_arrow_down),
@@ -122,7 +138,10 @@ class _CurrencyRow extends StatelessWidget {
           items: CurrencyConfig.supportedCurrencies
               .map((Currency currency) => DropdownMenuItem(
                     value: currency,
-                    child: Text(currency.fullName),
+                    child: Text(
+                      currency.fullName,
+                      style: Theme.of(context).textTheme.subtitle2,
+                    ),
                   ))
               .toList(),
         ),
@@ -170,6 +189,9 @@ class __AmountInputViewState extends State<_AmountInputView> {
         inputFormatters: [
           FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')),
         ],
+        style: Theme.of(context).textTheme.headline4!.copyWith(
+              color: Colors.blue,
+            ),
         keyboardType: TextInputType.numberWithOptions(decimal: true),
         controller: _inputController,
         onChanged: (value) {

@@ -27,6 +27,7 @@ class CurrencyRateView extends StatelessWidget {
           },
         ),
         RawMaterialButton(
+          elevation: 4,
           fillColor: Colors.white,
           shape: CircleBorder(),
           child: Icon(Icons.swap_horiz_outlined),
