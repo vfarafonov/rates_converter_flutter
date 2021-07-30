@@ -85,12 +85,20 @@ class CurrencyConverterBloc extends Bloc<CurrencyConverterEvent, CurrencyConvert
     yield* _computeAmountAndEmitState(baseAmount, targetAmount.currency);
   }
 
-  Stream<CurrencyConverterState> _mapSwapCurrencyEventToState(
-      CurrencyConverterEventSwapCurrency event) async* {
-    throw Exception("Not implemented");
+  Stream<CurrencyConverterState> _mapSwapCurrencyEventToState(CurrencyConverterEventSwapCurrency event) async* {
+    if (state is! CurrencyConverterStateRateAvailable) {
+      return;
+    }
+    var stateRatesAvailable = state as CurrencyConverterStateRateAvailable;
+
+    final baseAmount = stateRatesAvailable.baseAmount;
+    final targetAmount = stateRatesAvailable.targetAmount;
+
+    yield* _computeAmountAndEmitState(targetAmount, baseAmount.currency);
   }
 
-  Stream<CurrencyConverterState> _computeAmountAndEmitState(ConversionAmount defaultBaseAmount, Currency defaultTargetCurrency) async* {
+  Stream<CurrencyConverterState> _computeAmountAndEmitState(
+      ConversionAmount defaultBaseAmount, Currency defaultTargetCurrency) async* {
     try {
       final targetAmount = await _computeTargetConversionAmount(defaultBaseAmount, defaultTargetCurrency);
       yield CurrencyConverterStateRateAvailable(defaultBaseAmount, targetAmount);

@@ -25,6 +25,14 @@ class CurrencyRateView extends StatelessWidget {
             BlocProvider.of<CurrencyConverterBloc>(context).add(CurrencyConverterEventChangeBaseCurrency(newCurrency));
           },
         ),
+        RawMaterialButton(
+          fillColor: Colors.white,
+          shape: CircleBorder(),
+          child: Icon(Icons.swap_horiz_outlined),
+          onPressed: () {
+            BlocProvider.of<CurrencyConverterBloc>(context).add(CurrencyConverterEventSwapCurrency());
+          },
+        ),
         CurrencyCard(
           amount: targetAmount,
           onCurrencyChanged: (newCurrency) {
