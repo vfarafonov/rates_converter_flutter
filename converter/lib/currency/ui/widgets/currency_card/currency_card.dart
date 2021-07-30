@@ -26,58 +26,100 @@ class _CurrencyCardState extends State<CurrencyCard> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text("${widget.amount.currency.symbol} ${widget.amount.currency.currencyCode}"),
-                DropdownButton(
-                  value: widget.amount.currency,
-                  icon: const Icon(Icons.keyboard_arrow_down),
-                  underline: null,
-                  onChanged: (Currency? value) {
-                    if (value != null) {
-                      widget.onCurrencyChanged(value);
-                    }
-                  },
-                  items: CurrencyConfig.supportedCurrencies
-                      .map((Currency currency) => DropdownMenuItem(
-                            value: currency,
-                            child: Text(currency.fullName),
-                          ))
-                      .toList(),
-                ),
-              ],
+            _CurrencyRow(
+              currency: widget.amount.currency,
+              onCurrencyChanged: widget.onCurrencyChanged,
             ),
-            Row(
-              children: [
-                Text(widget.amount.currency.symbol),
-                SizedBox(width: 8),
-                ConstrainedBox(
-                  constraints: BoxConstraints(
-                    minWidth: 48,
-                    maxWidth: 128,
-                  ),
-                  child: _getAmountWidget(),
-                ),
-              ],
+            _AmountRow(
+              conversionAmount: widget.amount,
+              onAmountChanged: widget.onAmountChanged,
             ),
           ],
         ),
       ),
     );
   }
+}
+
+class _AmountRow extends StatelessWidget {
+  final ConversionAmount _conversionAmount;
+  final Function(double)? _onAmountChanged;
+
+  const _AmountRow({
+    Key? key,
+    required conversionAmount,
+    required onAmountChanged,
+  })  : _conversionAmount = conversionAmount,
+        _onAmountChanged = onAmountChanged,
+        super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Text(_conversionAmount.currency.symbol),
+        SizedBox(width: 8),
+        ConstrainedBox(
+          constraints: BoxConstraints(
+            minWidth: 48,
+            maxWidth: 128,
+          ),
+          child: _getAmountWidget(),
+        ),
+      ],
+    );
+  }
 
   /// Returns TextField if input is allowed and Text otherwise
   Widget _getAmountWidget() {
-    if (widget.onAmountChanged == null) {
+    if (_onAmountChanged == null) {
       // There is no watcher therefore just displaying the amount
-      return Text(_getUserFriendlyAmount(widget.amount.majorUnitAmount));
+      return Text(_getUserFriendlyAmount(_conversionAmount.majorUnitAmount));
     } else {
       return _AmountInputView(
-        onAmountChanged: widget.onAmountChanged!,
-        currentAmount: widget.amount.majorUnitAmount,
+        onAmountChanged: _onAmountChanged!,
+        currentAmount: _conversionAmount.majorUnitAmount,
       );
     }
+  }
+}
+
+class _CurrencyRow extends StatelessWidget {
+  final Currency _currency;
+  final Function(Currency) _onCurrencyChanged;
+
+  const _CurrencyRow({
+    Key? key,
+    required currency,
+    required onCurrencyChanged,
+  })  : _currency = currency,
+        _onCurrencyChanged = onCurrencyChanged,
+        super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text("${_currency.symbol} ${_currency.currencyCode}"),
+        DropdownButton(
+          value: _currency,
+          icon: const Icon(Icons.keyboard_arrow_down),
+          underline: null,
+          onChanged: (Currency? value) {
+            if (value != null) {
+              _onCurrencyChanged(value);
+            }
+          },
+          items: CurrencyConfig.supportedCurrencies
+              .map((Currency currency) => DropdownMenuItem(
+                    value: currency,
+                    child: Text(currency.fullName),
+                  ))
+              .toList(),
+        ),
+      ],
+    );
   }
 }
 
@@ -117,7 +159,9 @@ class __AmountInputViewState extends State<_AmountInputView> {
     }
     return IntrinsicWidth(
       child: TextField(
-        inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')),],
+        inputFormatters: [
+          FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')),
+        ],
         keyboardType: TextInputType.numberWithOptions(decimal: true),
         controller: _inputController,
         onChanged: (value) {

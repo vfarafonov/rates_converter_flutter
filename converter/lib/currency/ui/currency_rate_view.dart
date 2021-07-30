@@ -1,6 +1,6 @@
 import 'package:converter/currency/bloc/bloc.dart';
 import 'package:converter/currency/models/conversion_amount.dart';
-import 'package:converter/currency/ui/widgets/currency_card.dart';
+import 'package:converter/currency/ui/widgets/currency_card/currency_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
