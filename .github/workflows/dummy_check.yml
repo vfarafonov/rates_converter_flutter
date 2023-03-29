@@ -1,0 +1,13 @@
+name: "Dummy check"
+on:
+  pull_request:
+  workflow_dispatch:
+jobs:
+  return_success:
+    runs-on: ubuntu-20.04
+    timeout-minutes: 3
+
+    steps:
+      - name: Return success
+        run: |
+          echo "Retunrning success"
