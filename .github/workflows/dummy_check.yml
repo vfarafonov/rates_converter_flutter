@@ -1,16 +1,16 @@
-name: "Dummy check"
+# Dummy wrokflow that always passes right away.
+# Trunk.io requires some checks to be listed. However, we do not want to re-run real checks multiple times
+name: "Trunk No-Op (always pass)"
 on:
-  pull_request:
   push:
     branches:
       - trunk-merge/**
-  workflow_dispatch:
 jobs:
-  return_success:
+  trunk_no_op_return_success:
     runs-on: ubuntu-20.04
     timeout-minutes: 3
 
     steps:
       - name: Return success
         run: |
-          echo "Retunrning success"
+          echo "Returning success"
