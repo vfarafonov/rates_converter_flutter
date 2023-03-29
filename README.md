@@ -22,3 +22,4 @@ Notes:
 - That is possible to select the same currencies on both sides or select the same currency as active. For real app 
   I would probably improve UX
 - Had no time for screen layout optimisation, but should not be an issue on most screens
+ 
