@@ -1,6 +1,9 @@
 name: "Dummy check"
 on:
   pull_request:
+  push:
+    branches:
+      - trunk-merge/**
   workflow_dispatch:
 jobs:
   return_success:
